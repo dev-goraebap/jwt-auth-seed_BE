@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `user_tokens_user_id_unique` ON `user_tokens` (`user_id`);
