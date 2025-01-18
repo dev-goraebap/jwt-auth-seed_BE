@@ -1,8 +1,7 @@
 {
   "name": "jwt-auth-seed-server",
-  "version": "0.9.8",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "author": "dev.goraebap",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
