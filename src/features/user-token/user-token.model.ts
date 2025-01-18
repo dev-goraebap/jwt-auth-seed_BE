@@ -1,6 +1,7 @@
 import {plainToInstance} from "class-transformer";
 
-import {OrmModel, toKSTDate} from "src/shared/database";
+import {OrmModel} from "src/shared/database";
+import { nanoid } from 'nanoid';
 
 export class UserTokenModel extends OrmModel {
     readonly id: string;
@@ -14,7 +15,7 @@ export class UserTokenModel extends OrmModel {
     static from(param: Pick<UserTokenModel, 'userId' | 'refreshToken'>) {
         const now: Date = new Date();
         return plainToInstance(UserTokenModel, {
-            id: `${param.userId}:${param.refreshToken}`,
+            id: nanoid(30),
             userId: param.userId,
             refreshToken: param.refreshToken,
             expiryDate: new Date(Date.now() + UserTokenModel.REFRESH_EXPIRES_TIME),
