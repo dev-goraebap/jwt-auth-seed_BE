@@ -7,10 +7,11 @@ WORKDIR /usr/src/app
 # package 파일을 복사하고 프로덕션 종속성만 설치합니다.
 COPY package*.json ./
 COPY .env.production ./
-RUN npm install --production
+RUN npm install
 
 # 나머지 애플리케이션 코드를 복사합니다.
 COPY ./dist ./dist
+COPY ./public ./public
 
 # 2단계: 프로덕션 단계
 FROM node:20-slim AS production
@@ -23,6 +24,7 @@ COPY --from=build /usr/src/app/package*.json ./
 COPY --from=build /usr/src/app/.env.production ./
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/public ./public
 
 # PORT 8000번 개방
 EXPOSE 8000
