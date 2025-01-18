@@ -1,29 +1,29 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch} from "@nestjs/common";
-import {ApiBearerAuth, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import {Public, UserModel, UserParam, UserService} from "src/features/user";
+import { Public, UserModel, UserParam } from 'src/features/user';
 
-import {UserFacade} from "./user.facade";
+import { UserFacade } from './user.facade';
 import {
     IsEmailTakenResultDTO,
     ProfileResultDTO,
     UpdateNicknameDTO,
     UpdatePasswordToOtpDTO,
-    WithdrawDTO
-} from "./user.dto";
+    WithdrawDTO,
+} from './user.dto';
 
-@Controller()
+@Controller({ version: '1' })
 @ApiTags('사용자 정보')
 export class UserController {
 
     constructor(
-        private readonly userService: UserService,
         private readonly userFacade: UserFacade,
-    ) { }
+    ) {
+    }
 
     @Public()
     @Get('emails/:email/duplicated')
-    @ApiOperation({summary: '이메일 중복 검증'})
+    @ApiOperation({ summary: '이메일 중복 검증' })
     @ApiResponse({ type: IsEmailTakenResultDTO })
     async isEmailTaken(@Param('email') email: string) {
         return this.userFacade.isEmailTaken(email);
@@ -31,7 +31,7 @@ export class UserController {
 
     @Get('me')
     @ApiBearerAuth()
-    @ApiOperation({summary: '프로필 조회'})
+    @ApiOperation({ summary: '프로필 조회' })
     @ApiResponse({ type: ProfileResultDTO })
     async getProfile(@UserParam() user: UserModel) {
         return ProfileResultDTO.from(user);
@@ -39,14 +39,15 @@ export class UserController {
 
     @Patch('me/nickname')
     @ApiBearerAuth()
-    @ApiOperation({summary: '닉네임 변경'})
+    @ApiOperation({ summary: '닉네임 변경' })
+    @ApiResponse({ type: ProfileResultDTO })
     async updateNickname(@UserParam() user: UserModel, @Body() dto: UpdateNicknameDTO) {
-        await this.userService.updateNickname(user, dto.nickname);
+        return await this.userFacade.updateNickname(user, dto);
     }
 
     @Public()
     @Patch('password')
-    @ApiOperation({summary: 'OTP인증 후 비밀번호 변경'})
+    @ApiOperation({ summary: 'OTP인증 후 비밀번호 변경' })
     async updatePassword(@Body() dto: UpdatePasswordToOtpDTO) {
         await this.userFacade.updatePassword(dto);
     }
@@ -54,7 +55,7 @@ export class UserController {
     @Delete('me/withdraw')
     @ApiBearerAuth()
     @HttpCode(HttpStatus.NO_CONTENT)
-    @ApiOperation({summary: 'OTP인증 후 회원탈퇴'})
+    @ApiOperation({ summary: 'OTP인증 후 회원탈퇴' })
     async withdraw(@UserParam() user: UserModel, @Body() dto: WithdrawDTO) {
         await this.userFacade.withdraw(user, dto);
     }

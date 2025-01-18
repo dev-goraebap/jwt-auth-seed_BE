@@ -7,7 +7,7 @@ import {ApiRefreshTokenHeader, RefreshToken} from "src/features/user-token";
 import {GenerateOtpDTO, LoginDTO, RegisterDTO, VerifyOtpDTO} from "./auth.dto";
 import {AuthFacade} from "./auth.facade";
 
-@Controller()
+@Controller({ version: '1' })
 @ApiTags('일반인증')
 export class AuthController {
 
