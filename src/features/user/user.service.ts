@@ -1,7 +1,8 @@
-import {BadRequestException, Injectable, UnauthorizedException} from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import {UserModel} from "./user.model";
-import {UserRepository} from "./user.repository";
+import { UserModel } from './user.model';
+import { UserRepository } from './user.repository';
+import { CustomBadRequestException, CustomExceptions } from '../../shared/error';
 
 @Injectable()
 export class UserService {
@@ -93,7 +94,7 @@ export class UserService {
      */
     async verifyActiveUser(user: UserModel) {
         if (!user.isEmailVerified) {
-            throw new BadRequestException('이메일 인증이 필요합니다.');
+            throw new CustomBadRequestException(CustomExceptions.VERIFY_EMAIL, '이메일 인증이 필요합니다.');
         }
         return user;
     }
