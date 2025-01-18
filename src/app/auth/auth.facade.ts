@@ -36,7 +36,7 @@ export class AuthFacade {
     async generateOtp(dto: GenerateOtpDTO) {
         let user = await this.userService.getUserByEmailOrThrow(dto.email);
         user = await this.userService.updateOtp(user);
-        await this.mailService.send(user.email, user.otp);
+        await this.mailService.sendOtpCode(user.email, user.otp);
     }
 
     async verifyOtp(dto: VerifyOtpDTO) {
